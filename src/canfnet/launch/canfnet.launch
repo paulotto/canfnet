@@ -1,0 +1,40 @@
+<launch>
+    <arg name="rqt_gui" default="true"/>
+    <arg name="tactile_device" default="GelSightMini"/> <!-- DIGIT, GelSightMini -->
+    <arg name="tactile_device_path" default="/dev/GelSightMini"/>
+    <arg name="digit_serial" default="D20025"/>
+    <arg name="tactile_cam_undistort" default="true"/> <!-- So far, only for GelSight Mini -->
+
+    <arg name="torch_device" default="cuda"/>
+    <arg name="canfnet_force_filt" default="true"/>
+    <arg name="model" default="$(find canfnet)/src/unet/models/GelSightMini/model_13-02-2023_11-29-23_256_gelsight.pth"/>
+
+    <node
+            pkg="visuotactile_sensor"
+            type="visuotactile_sensor_node"
+            name="visuotactile_sensor_node"
+            output="screen">
+        <param name="tactile_device" type="string" value="$(arg tactile_device)"/>
+        <param name="tactile_device_path" type="string" value="$(arg tactile_device_path)"/>
+        <param name="tactile_cam_undistort" type="bool" value="$(arg tactile_cam_undistort)"/>
+    </node>
+
+    <node
+            pkg="visuotactile_sensor"
+            type="canfnet_node.py"
+            name="canfnet_node"
+            output="screen">
+        <param name="torch_device" type="string" value="$(arg torch_device)"/>
+        <param name="digit_serial" type="string" value="$(arg digit_serial)"/>
+        <param name="canfnet_force_filt" type="bool" value="$(arg canfnet_force_filt)"/>
+        <param name="model" type="string" value="$(arg model)"/>
+    </node>
+
+    <node
+            name="rqt_gui"
+            pkg="rqt_gui"
+            type="rqt_gui"
+            args="--perspective-file $(find canfnet)/config/canfnet.perspective"
+            if="$(arg rqt_gui)"
+    />
+</launch>
