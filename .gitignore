@@ -1,0 +1,10 @@
+build/
+devel/
+logs/
+.catkin_tools/
+.catkin_workspace
+.idea/
+bags/
+doc/
+venv/
+__pycache__/
