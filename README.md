@@ -18,12 +18,12 @@ different sensors of the same type. Thus, the trained CANFnet provides a plug-an
 area and normal force estimation for visuotactile sensors. Additional information and videos can be seen at 
 https://sites.google.com/view/canfnet.
 
-**Models and datasets will be released soon...**
-
 ## Table Of Contents
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Models](#models)
+- [Dataset](#dataset)
 - [Project Structure](#project-structure)
 - [License](#license)
 
@@ -77,8 +77,16 @@ roslaunch canfnet.launch rqt_gui:=true tactile_device:=GelSightMini tactile_devi
 | canfnet_force_filt    | True if the estimated normal force is to be (median) filtered      |
 | model                 | The PyTorch model including the file path                          |
 
-## Udev rules
-TODO
+## Models
+Our trained models are placed inside
+
+```
+src/canfnet/models/
+```
+
+## Dataset
+The data that has been used to train our model can be found 
+[here](https://archimedes.ias.informatik.tu-darmstadt.de/s/6Jroz6Fqsr2faat) .
 
 ## Project Structure
 ```
@@ -120,10 +128,13 @@ canfnet
 ```
 
 ## Citation
-TODO
 
-## Contributing
-TODO
-
-## License
-TODO
+If you use code or ideas from this work for your projects or research, please cite it.
+```
+@article{funk_canfnet,
+title = {CANFnet: High-Resolution Pixelwise Contact Area and Normal Force Estimation for Visuotactile Sensors Using Neural Networks},
+year = {2023},
+url = {https://sites.google.com/view/canfnet},
+author = {Niklas Funk and Paul-Otto Müller and Boris Belousov and Anton Savchenko and Rolf Findeisen and Jan Peters}
+}
+```
