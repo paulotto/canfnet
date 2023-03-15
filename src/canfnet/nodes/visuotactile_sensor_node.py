@@ -16,7 +16,7 @@ from canfnet.utils.utils import PrintColors
 
 VISTAC_DEVICE: str = rospy.get_param('/visuotactile_sensor_node/tactile_device', 'GelSightMini')
 TACTILE_DEVICE_PATH: str = rospy.get_param('/visuotactile_sensor_node/tactile_device_path', '/dev/video0')
-DIGIT_SERIAL_NR: str = rospy.get_param('/visuotactile_sensor_node/tactile_device', 'D20025')
+DIGIT_SERIAL_NR: str = rospy.get_param('/visuotactile_sensor_node/digit_serial', 'D20025')
 TACTILE_CAM_UNDISTORT: bool = rospy.get_param('/visuotactile_sensor_node/tactile_cam_undistort', True)
 
 
