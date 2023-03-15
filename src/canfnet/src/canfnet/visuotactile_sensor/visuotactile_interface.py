@@ -13,7 +13,7 @@ from pathlib import Path
 from digit_interface import Digit
 from typing import Optional, Union, Dict, Tuple
 
-from ..utils.utils import PrintColors, load_yaml
+from canfnet.utils.utils import PrintColors, load_yaml
 
 
 class TactileDevice(enum.Enum):
@@ -28,7 +28,7 @@ class VistacInterface:
 
     def __init__(self, device_name: Union[TactileDevice, str],
                  device_path: Optional[str] = '/dev/video0',
-                 undistort_image: Optional[Path, str] = None) -> None:
+                 undistort_image: Optional[Union[Path, str]] = None) -> None:
         """
         Initializer.
 
@@ -43,13 +43,13 @@ class VistacInterface:
 
         self.device_name: Union[TactileDevice, str] = device_name
         self.device_path: Optional[str] = device_path
-        self._device: Optional[cv2.VideoCapture, Digit] = None
+        self._device: Optional[Union[cv2.VideoCapture, Digit]] = None
 
         self.image: Optional[np.ndarray] = None
         self.image_dim: Tuple[int, int] = (320, 240)
 
     @property
-    def device(self) -> Optional[cv2.VideoCapture, Digit]:
+    def device(self) -> Optional[Union[cv2.VideoCapture, Digit]]:
         return self._device
 
     def connect(self) -> None:
@@ -70,7 +70,8 @@ class VistacInterface:
 
         :return: A visuotactile image.
         """
-        ret, image_ = self._device.read()
+        ret, image_ = self._device.read() if self._device is not None else (False, np.zeros((320, 240, 3),
+                                                                                            dtype=np.uint8))
         if ret:
             self.image = cv2.resize(image_, self.image_dim)
             if self.cam_params_dict is not None:
@@ -79,14 +80,14 @@ class VistacInterface:
                                            self.cam_params_dict['new_camera_matrix'])
         else:
             self.image = None
-            print(f"{PrintColors.FAIL} Failed to capture image! {self.device_path}! {PrintColors.ENDC}")
+            print(f"{PrintColors.FAIL} Failed to capture image at {self.device_path}! {PrintColors.ENDC}")
 
-        return self.image
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
 
 
 class DIGIT(VistacInterface):
     def __init__(self, serial_nr: str = 'D20025',
-                 undistort_image: Optional[Path, str] = None) -> None:
+                 undistort_image: Optional[Union[Path, str]] = None) -> None:
         """
         Initializer.
 
@@ -131,7 +132,7 @@ class GelSightMini(VistacInterface):
         :return: None
         """
         if undistort_image:
-            super().__init__(TactileDevice.GELSIGHTMINI, device_path, Path(self._file_dir, 'params',
+            super().__init__(TactileDevice.GELSIGHTMINI, device_path, Path(Path(__file__).parent.resolve(), 'params',
                                                                            'cam_params_gelsightmini.yaml'))
         else:
             super().__init__(TactileDevice.GELSIGHTMINI, device_path, None)
@@ -144,13 +145,14 @@ class GelSightMini(VistacInterface):
 
         :return: A visuotactile image from the GelSight Mini sensor.
         """
-        ret, self.image = self._device.read()
+        ret, self.image = self._device.read() if self._device is not None else (False, np.zeros((320, 240, 3),
+                                                                                                dtype=np.uint8))
         if ret:
             self.image = self.preprocess(self.image)
         else:
-            print(f"{PrintColors.FAIL} Failed to capture image! {self.device_path}! {PrintColors.ENDC}")
+            print(f"{PrintColors.FAIL} Failed to capture image at {self.device_path}! {PrintColors.ENDC}")
 
-        return self.image
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
 
     def preprocess(self, image: np.ndarray) -> np.ndarray:
         """
@@ -167,9 +169,9 @@ class GelSightMini(VistacInterface):
         image_ = cv2.resize(image, self.image_dim)
 
         if self.cam_params_dict is not None:
-            image_ = cv2.undistort(image_, self.cam_params_dict['camera_matrix'],
-                                   self.cam_params_dict['dist_coeff'], None,
-                                   self.cam_params_dict['new_camera_matrix'])
+            image_ = cv2.undistort(image_, np.array(self.cam_params_dict['camera_matrix'], dtype=np.double),
+                                   np.array(self.cam_params_dict['dist_coeff'], dtype=np.double), None,
+                                   np.array(self.cam_params_dict['new_camera_matrix'], dtype=np.double))
 
         image_ = image_[cut_width:self.image_dim[0] - cut_width, cut_height:self.image_dim[1] - cut_height]
         image_ = cv2.resize(image_, self.image_dim)

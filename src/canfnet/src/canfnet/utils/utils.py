@@ -30,8 +30,7 @@ import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import Dict, Tuple, Sequence, Mapping, Union, Any, Optional, List
-from numpy import uint8, number
-from numpy.typing import NDArray
+from numpy import number
 
 numeric = Union[int, float, number]
 
@@ -55,7 +54,7 @@ class PrintColors:
     UNDERLINE = '\033[4m'
 
 
-def load_yaml(file: Optional[str, Path]) -> Optional[Dict[str, Any]]:
+def load_yaml(file: Optional[Union[str, Path]]) -> Optional[Union[Dict[str, Any]]]:
     """
     Loads an YAML file.
 
@@ -72,7 +71,7 @@ def load_yaml(file: Optional[str, Path]) -> Optional[Dict[str, Any]]:
     return loaded_dict
 
 
-def write_yaml(data: Union[Mapping, Sequence, numeric], file: Optional[str, Path]) -> None:
+def write_yaml(data: Union[Mapping, Sequence, numeric], file: Optional[Union[str, Path]]) -> None:
     """
     Writes data to a YAML file.
 
@@ -98,7 +97,7 @@ def find(s, ch) -> List[int]:
     return [i for i, ltr in enumerate(s) if ltr == ch]
 
 
-def load_image(img_path: str, shape: Tuple[int, int, int] = None) -> NDArray[uint8]:
+def load_image(img_path: str, shape: Tuple[int, int, int] = None) -> np.ndarray:
     """
     Loads an image.
 
@@ -106,14 +105,14 @@ def load_image(img_path: str, shape: Tuple[int, int, int] = None) -> NDArray[uin
     :param shape: Shape to be used for resizing the image. No resizing if shape is None.
     :return: The loaded image.
     """
-    img: NDArray[uint8] = cv2.imread(img_path)  # flags=cv2.IMREAD_UNCHANGED
+    img: np.ndarray = cv2.imread(img_path)  # flags=cv2.IMREAD_UNCHANGED
     if shape is not None:
         img = cv2.resize(img, shape)
 
     return img
 
 
-def save_image(img_path: str, img: NDArray[uint8], img_format: str = '.jpg') -> None:
+def save_image(img_path: str, img: np.ndarray, img_format: str = '.jpg') -> None:
     """
     Writes an image to the specified path.
 

@@ -14,8 +14,8 @@ from pathlib import Path
 from torch import Tensor
 from typing import Optional, Tuple
 
-from unet import UNet
-from ..utils.utils import PrintColors
+from .unet import UNet
+from canfnet.utils.utils import PrintColors
 
 RESIZE: Tuple[int, int] = (0, 0)
 FILTER_SIZE: int = 5

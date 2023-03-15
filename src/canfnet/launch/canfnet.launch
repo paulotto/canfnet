@@ -7,11 +7,11 @@
 
     <arg name="torch_device" default="cuda"/>
     <arg name="canfnet_force_filt" default="true"/>
-    <arg name="model" default="$(find canfnet)/src/unet/models/GelSightMini/model_13-02-2023_11-29-23_256_gelsight.pth"/>
+    <arg name="model" default="$(find canfnet)/models/GelSightMini/model_23-02-2023_16-49-19_256_gelsight_mini.pth"/>
 
     <node
-            pkg="visuotactile_sensor"
-            type="visuotactile_sensor_node"
+            pkg="canfnet"
+            type="visuotactile_sensor_node.py"
             name="visuotactile_sensor_node"
             output="screen">
         <param name="tactile_device" type="string" value="$(arg tactile_device)"/>
@@ -20,7 +20,7 @@
     </node>
 
     <node
-            pkg="visuotactile_sensor"
+            pkg="canfnet"
             type="canfnet_node.py"
             name="canfnet_node"
             output="screen">

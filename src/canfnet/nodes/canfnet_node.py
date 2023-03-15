@@ -18,10 +18,9 @@ from typing import Tuple, Union, Optional
 from cv_bridge import CvBridge
 from torch import device, Tensor
 
-import unet.predict as unet
+import canfnet.unet.predict as unet
 from canfnet.msg import UNetEstimation
-from unet.unet import UNet
-
+from canfnet.unet.unet import UNet
 
 FILE_DIR: Path = Path(__file__).parent.resolve()
 MODEL_PATH = rospy.get_param('/canfnet_node/model',
@@ -33,14 +32,14 @@ UNET: UNet
 
 # GelSight Mini.
 NORM_IMG: Optional[Tuple[Tensor, Tensor]] = (Tensor([0.4907543957, 0.4985137582, 0.4685586393]),
-                                             Tensor([0.0307641067, 0.0246135872, 0.0398434214]))      # (mean, std).
-NORM_DIS: Optional[Tuple[Tensor, Tensor]] = (Tensor([-6.0596092226e-05]), Tensor([0.0002053244]))     # (mean, std).
+                                             Tensor([0.0307641067, 0.0246135872, 0.0398434214]))  # (mean, std).
+NORM_DIS: Optional[Tuple[Tensor, Tensor]] = (Tensor([-6.0596092226e-05]), Tensor([0.0002053244]))  # (mean, std).
 
 # DIGIT.
 if VISTAC_DEVICE == 'DIGIT':
     NORM_IMG: Optional[Tuple[Tensor, Tensor]] = (Tensor([0.5024564266, 0.4860377908, 0.5020657778]),
                                                  Tensor([0.0415902548, 0.0462468602, 0.0575232506]))  # (mean, std).
-    NORM_DIS: Optional[Tuple[Tensor, Tensor]] = (Tensor([-0.0001196197]), Tensor([0.0003911761]))     # (mean, std).
+    NORM_DIS: Optional[Tuple[Tensor, Tensor]] = (Tensor([-0.0001196197]), Tensor([0.0003911761]))  # (mean, std).
 
 
 def decode_compressed_image(image: CompressedImage) -> np.ndarray:
@@ -64,6 +63,8 @@ def publish_canfnet_estimation(image: Union[Image, CompressedImage]) -> None:
     bridge: CvBridge = CvBridge()
     pub: rospy.Publisher = rospy.Publisher('/visuotactile_sensor/unet_estimation',
                                            numpy_msg(UNetEstimation), queue_size=25)
+    pub_img: rospy.Publisher = rospy.Publisher('/visuotactile_sensor/unet_estimation_image',
+                                               Image, queue_size=25)
     unet_est: UNetEstimation = numpy_msg(UNetEstimation)()
 
     if isinstance(image, CompressedImage):
@@ -83,15 +84,15 @@ def publish_canfnet_estimation(image: Union[Image, CompressedImage]) -> None:
     unet_est.header.frame_id = 'visuotactile_sensor'
 
     # Convert the force distribution to a color image for display.
-    norm = mpl.colors.Normalize(vmin=-0.00075, vmax=-0.0012)
+    norm = mpl.colors.Normalize(vmin=-0.00075, vmax=-0.00012)
     cmap = cm.get_cmap('RdYlBu_r')
     m = cm.ScalarMappable(norm=norm, cmap=cmap)
     f_dis_img = m.to_rgba(f_dis[:, :, 0], bytes=True, norm=True)
     f_dis_img = bridge.cv2_to_imgmsg(f_dis_img, encoding='rgba8')
-    unet_est.force_dis_image = f_dis_img
 
     # Publish the normal force and its distribution as float array and as RGB color image.
     pub.publish(unet_est)
+    pub_img.publish(f_dis_img)
 
 
 def vistac_listener() -> None:
