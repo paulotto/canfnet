@@ -77,6 +77,9 @@ roslaunch canfnet.launch rqt_gui:=true tactile_device:=GelSightMini tactile_devi
 | canfnet_force_filt    | True if the estimated normal force is to be (median) filtered      |
 | model                 | The PyTorch model including the file path                          |
 
+## Udev rules
+TODO
+
 ## Project Structure
 ```
 canfnet
@@ -87,33 +90,33 @@ canfnet
     └───canfnet
         │   CMakeLists.txt
         │   package.xml
+        │   setup.py
         └───config
-        │   │   canfnet.perspective       
-        └───include
-        │   │
-        │   └───canfnet  
+        │       canfnet.perspective        
         └───launch
-        │   │   canfnet.launch
+        │       canfnet.launch
+        └───models
         └───msg
-        │   │   UNetEstimation.msg
+        │       UNetEstimation.msg
+        └───nodes
+        │       canfnet_node.py
+        │       visuotactile_sensor_node.py
         └───src
-            │   canfnet_node.py
-            │   __init__.py
-            │   visuotactile_sensor_node.py
-            └───models
-            └───unet
-            │   │   __init__.py
-            │   │   predict.py
-            │   │   unet.py
-            └───utils
-            │   │   __init__.py
-            │   │   utils.py
-            └───visuotactile_sensor
+            └───canfnet
                 │   __init__.py
-                │   visuotactile_interface.py
-                └───params
-                    │   cam_params_digit.yaml
-                    │   cam_params_gelsightmini.yaml
+                └───unet
+                │       __init__.py
+                │       predict.py
+                │       unet.py
+                └───utils
+                │       __init__.py
+                │       utils.py
+                └───visuotactile_sensor
+                    │   __init__.py
+                    │   visuotactile_interface.py
+                    └───params
+                        │   cam_params_digit.yaml
+                        │   cam_params_gelsightmini.yaml
 ```
 
 ## Citation
