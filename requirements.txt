@@ -1,6 +1,7 @@
 catkin~=0.8.10
 catkin-pkg~=0.5.2
 cv-bridge~=1.16.2
+digit-interface~=0.2.1
 matplotlib~=3.5.3
 numpy~=1.23.2
 numpy-quaternion~=2022.4.2
