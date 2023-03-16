@@ -89,6 +89,7 @@ def predict(image: np.ndarray,
     :param norm_img: The mean and std deviation for each channel to normalize the input image.
     :param norm_dis: The mean and std deviation to de-normalize the predicted normal force distribution.
     :param force_filter: True if the estimated normal force should be (median) filtered.
+    :return: The predicted normal force and normal force distribution.
     """
     if torch_device == 'cuda':
         torch_device = 'cuda' if torch.cuda.is_available() else 'cpu'

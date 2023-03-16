@@ -65,7 +65,7 @@ def load_yaml(file: Optional[Union[str, Path]]) -> Optional[Union[Dict[str, Any]
         with open(file, 'r') as stream:
             loaded_dict = yaml.load(stream, Loader=yaml.FullLoader)
     except (yaml.YAMLError, IOError) as exc:
-        print(f"Could not load yaml file {file}: {exc}")
+        print(f"{PrintColors.FAIL} Could not load yaml file {file}: {exc} {PrintColors.ENDC}")
         return None
 
     return loaded_dict
@@ -83,7 +83,7 @@ def write_yaml(data: Union[Mapping, Sequence, numeric], file: Optional[Union[str
         with open(file, 'w') as stream:
             yaml.dump(data, stream)
     except IOError as exc:
-        print(f"Could not save data to yaml file {file}: {exc}")
+        print(f"{PrintColors.FAIL} Could not save data to yaml file {file}: {exc} {PrintColors.ENDC}")
 
 
 def find(s, ch) -> List[int]:
