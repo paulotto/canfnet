@@ -48,7 +48,7 @@ class VistacDataSet(Dataset):
         self.indenter_areas = load_yaml(str(Path(Path(__file__).parent, 'params',
                                                  'indenter_list_with_areas_in_mm.yaml').resolve()))
 
-        train_data_files: Dict[str, Union[Dict[float, List[str]], List[str]]] = self.find_data_files(train_data_dir)
+        train_data_files: Dict[str, Union[Dict[float, List[str]], List[str]]] = self.find_data_files(data_dir)
         self.input_files: Dict[float, List[str]] = train_data_files.get('inputs')
         self.label_files: List[str] = train_data_files.get('labels')
         self.ft_files: List[str] = train_data_files.get('ft')
