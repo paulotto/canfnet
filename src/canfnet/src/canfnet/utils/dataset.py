@@ -29,7 +29,7 @@ class VistacDataSet(Dataset):
     inside directories with the names of the corresponding objects used for creating the data.
     """
 
-    def __init__(self, train_data_dir: str,
+    def __init__(self, data_dir: str,
                  norm_img: Optional[Tuple[Tensor, Tensor]] = None,
                  norm_lbl: Optional[Tuple[Tensor, Tensor]] = None,
                  augment: bool = False,
@@ -37,7 +37,7 @@ class VistacDataSet(Dataset):
         """
         Initializer.
 
-        :param train_data_dir: The path to the directory where the numpy archives are stored.
+        :param data_dir: The path to the directory where the numpy archives are stored.
         :param norm_img: The mean and std deviation for each channel to normalize the input image.
         :param norm_lbl: The mean and std deviation to normalize the normal force distribution.
         :param augment: True if the input images should be augmented.
@@ -90,9 +90,22 @@ class VistacDataSet(Dataset):
         self._l_in: List[List[int]] = [[len(archive) for archive in self.inputs.get(key)] for key in self.inputs.keys()]
 
     def __len__(self) -> int:
+        """
+        Returns the number of samples inside the dataset.
+
+        :return: The dataset length.
+        """
         return sum([sum(l_) for l_ in self._l_in])
 
     def __getitem__(self, idx) -> Dict[str, Tensor]:
+        """
+        Returns a dictionary containing the visuotactile images, the normal force distributions, the surface area of the
+        used object in mm² and the measured total normal force.
+
+        :param idx: The index indicating the position of a sample inside the dataset.
+        :return: {'image': FloatTensor, 'force_distribution': FloatTensor,
+                  'area': FloatTensor, 'force': FloatTensor}
+        """
         idx_, archive_idx_, inputs_key_, inputs_archive_idx_ = self.get_index(idx)
 
         if self.mmap_mode is not None:
@@ -114,14 +127,14 @@ class VistacDataSet(Dataset):
 
     def get_index(self, idx) -> Tuple[int, int, float, int]:
         """
-        TODO --> Update
-        Calculates an index pair corresponding to the structure of the loaded list of numpy archives. The first index
-        refers to an element within an archive, and the second index to the corresponding archive in
-        the list of archives.
+        Calculates an index pair for both the visuotactile images and forces and force distributions corresponding to
+        the structure of the loaded list of numpy archives. The first index refers to an element within an archive,
+        and the second index refers to the corresponding archive in the list of archives.
 
         :param idx: The current index used to access training data.
         :return: The index of an element inside a numpy archive and the index of which
-        archive to be selected from the archive list.
+        archive to be selected from the archive list. The first two indexes are for the forces and distributions, the
+        second index pair for the visuotactile images.
         """
         l_lbl_idx_: int = 0
         keys_: List[float] = list(self.inputs.keys())
