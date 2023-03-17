@@ -119,7 +119,7 @@ class DIGIT(VistacInterface):
         """
         self.image = self._device.get_frame()
 
-        return self.image
+        return cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
 
 
 class GelSightMini(VistacInterface):
@@ -173,7 +173,7 @@ class GelSightMini(VistacInterface):
                                    np.array(self.cam_params_dict['dist_coeff'], dtype=np.double), None,
                                    np.array(self.cam_params_dict['new_camera_matrix'], dtype=np.double))
 
-        image_ = image_[cut_width:self.image_dim[0] - cut_width, cut_height:self.image_dim[1] - cut_height]
+        image_ = image_[cut_height:self.image_dim[1] - cut_height, cut_width:self.image_dim[0] - cut_width]
         image_ = cv2.resize(image_, self.image_dim)
 
         return image_
