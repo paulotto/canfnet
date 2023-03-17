@@ -22,9 +22,9 @@ import canfnet.unet.predict as unet
 from canfnet.msg import UNetEstimation
 from canfnet.unet.unet import UNet
 
-FILE_DIR: Path = Path(__file__).parent.resolve()
-MODEL_PATH = rospy.get_param('/canfnet_node/model',
-                             Path(FILE_DIR, 'models', 'model_19-10-2022_09-53-55_mse_ifl_256_norm.pth'))
+FILE_DIR: Path = Path(__file__).parent.parent.resolve()
+MODEL_PATH = rospy.get_param('/canfnet_node/model', Path(FILE_DIR, 'models', 'GelSightMini',
+                                                         'model_23-02-2023_16-49-19_256_gelsight_mini.pth'))
 VISTAC_DEVICE: str = rospy.get_param('/canfnet_node/tactile_device', 'GelSightMini')
 TORCH_DEVICE: device = rospy.get_param('/canfnet_node/torch_device', device('cuda'))
 CANFNET_FORCE_FILT: bool = rospy.get_param('/canfnet_node/canfnet_force_filt', True)
@@ -44,12 +44,12 @@ if VISTAC_DEVICE == 'DIGIT':
 
 def decode_compressed_image(image: CompressedImage) -> np.ndarray:
     """
-    Decodes compressed images and converts them from BGR to RGB ordering.
+    Decodes compressed images.
 
     :param image: A compressed image.
     :return: The decompressed image in RGB format.
     """
-    return cv2.cvtColor(cv2.imdecode(np.frombuffer(image.data, np.uint8), cv2.IMREAD_COLOR), cv2.COLOR_BGR2RGB)
+    return cv2.imdecode(np.frombuffer(image.data, np.uint8), cv2.IMREAD_COLOR)
 
 
 def publish_canfnet_estimation(image: Union[Image, CompressedImage]) -> None:
@@ -61,10 +61,8 @@ def publish_canfnet_estimation(image: Union[Image, CompressedImage]) -> None:
     :return: None
     """
     bridge: CvBridge = CvBridge()
-    pub: rospy.Publisher = rospy.Publisher('/visuotactile_sensor/unet_estimation',
-                                           numpy_msg(UNetEstimation), queue_size=25)
-    pub_img: rospy.Publisher = rospy.Publisher('/visuotactile_sensor/unet_estimation_image',
-                                               Image, queue_size=25)
+    pub: rospy.Publisher = rospy.Publisher('/canfnet/unet_estimation', numpy_msg(UNetEstimation), queue_size=25)
+    pub_img: rospy.Publisher = rospy.Publisher('/canfnet/unet_estimation_image', Image, queue_size=25)
     unet_est: UNetEstimation = numpy_msg(UNetEstimation)()
 
     if isinstance(image, CompressedImage):
@@ -72,7 +70,7 @@ def publish_canfnet_estimation(image: Union[Image, CompressedImage]) -> None:
     else:
         image = np.asarray(bridge.imgmsg_to_cv2(image, desired_encoding='rgb8'))
 
-    if unet.NORM_IMG is None:
+    if NORM_IMG is None:
         image = image.transpose((2, 0, 1))
 
     force, f_dis = unet.predict(image, UNET, TORCH_DEVICE, norm_img=NORM_IMG,
