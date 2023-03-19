@@ -44,6 +44,13 @@ https://sites.google.com/view/canfnet.
     ```bash
     git clone https://github.com/paulotto/canfnet.git /destination-directory/
     ```
+3. Install ROS package dependencies:
+    ```bash
+    sudo apt-get install python3-rosdep
+    cd /destination-directory/canfnet
+    source /opt/ros/noetic/setup.bash && apt-get update && rosdep install -y \
+      --from-paths ./src --ignore-src -r -y
+    ```
 2. Build the ROS workspace:
     ```bash
     cd /destination-directory/canfnet
