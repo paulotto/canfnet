@@ -1,5 +1,5 @@
 <launch>
-    <arg name="rqt_gui" default="true"/>
+    <arg name="rqt_gui" default="false"/>
     <arg name="tactile_device" default="GelSightMini"/> <!-- DIGIT, GelSightMini -->
     <arg name="tactile_device_path" default="/dev/GelSightMini"/>
     <arg name="digit_serial" default="D20025"/>
