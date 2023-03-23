@@ -1,7 +1,7 @@
 # CANFnet
 <a href="#"><img src="https://img.shields.io/badge/python-v3.8+-blue.svg?logo=python&style=for-the-badge" /></a>
 <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-v1.12.1-red.svg?logo=PyTorch&style=for-the-badge" /></a>
-<a href="https://sites.google.com/view/canfnet"><img src="https://img.shields.io/badge/ROS-noetic-green.svg?logo=ros&style=for-the-badge" /></a>
+<a href="http://wiki.ros.org/noetic"><img src="https://img.shields.io/badge/ROS-noetic-green.svg?logo=ros&style=for-the-badge" /></a>
 <a href="https://sites.google.com/view/canfnet"><img src="https://img.shields.io/badge/Website-CANFnet-color?style=for-the-badge" /></a>
 
 Visuotactile sensors are gaining momentum in robotics because they provide high-resolution contact measurements at 
@@ -44,20 +44,20 @@ https://sites.google.com/view/canfnet.
     ```bash
     git clone https://github.com/paulotto/canfnet.git /destination-directory/
     ```
-3. Install ROS package dependencies:
+2. Install ROS package dependencies:
     ```bash
     sudo apt-get install python3-rosdep
     cd /destination-directory/canfnet
     source /opt/ros/noetic/setup.bash && apt-get update && rosdep install -y \
       --from-paths ./src --ignore-src -r -y
     ```
-2. Build the ROS workspace:
+3. Build the ROS workspace:
     ```bash
     cd /destination-directory/canfnet
     source /opt/ros/noetic/setup.bash
     catkin build
     ```
-3. (Optional) ROS environment setup:
+4. (Optional) ROS environment setup:
 
     Source the setup files automatically so that you don't have to source them every time a new shell is launched.
     ```bash
@@ -127,43 +127,49 @@ sudo udevadm trigger
 ## Project Structure
 ```
 canfnet
-│   README.md
-│   requirements.txt   
-└───src
-    │   CMakeLists.txt
-    └───canfnet
-        │   CMakeLists.txt
-        │   package.xml
-        │   setup.py
-        └───config
-        │       canfnet.perspective        
-        └───launch
-        │       canfnet.launch
-        └───models
-        └───msg
-        │       UNetEstimation.msg
-        └───nodes
-        │       canfnet_node.py
-        │       visuotactile_sensor_node.py
-        └───src
-            └───canfnet
-                │   __init__.py
-                └───unet
-                │       __init__.py
-                │       predict.py
-                │       unet.py
-                └───utils
-                │   │   dataset.py
-                │   │   __init__.py
-                │   │   utils.py
-                │   └───params
-                │           indenter_list_with_areas_in_mm.yaml
-                └───visuotactile_sensor
-                    │   __init__.py
-                    │   visuotactile_interface.py
-                    └───params
-                        │   cam_params_digit.yaml
-                        │   cam_params_gelsightmini.yaml
+├── README.md
+├── requirements.txt
+└── src
+    ├── canfnet
+    │   ├── CMakeLists.txt
+    │   ├── config
+    │   │   └── canfnet.perspective
+    │   ├── include
+    │   │   └── canfnet
+    │   ├── launch
+    │   │   └── canfnet.launch
+    │   ├── models
+    │   │   ├── DIGIT
+    │   │   │   └── model_24-02-2023_14-49-02_256_digit.pth
+    │   │   └── GelSightMini
+    │   │       └── model_23-02-2023_16-49-19_256_gelsight_mini.pth
+    │   ├── msg
+    │   │   └── UNetEstimation.msg
+    │   ├── nodes
+    │   │   ├── canfnet_node.py
+    │   │   └── visuotactile_sensor_node.py
+    │   ├── package.xml
+    │   ├── setup.py
+    │   └── src
+    │       └── canfnet
+    │           ├── __init__.py
+    │           ├── unet
+    │           │   ├── __init__.py
+    │           │   ├── predict.py
+    │           │   └── unet.py
+    │           ├── utils
+    │           │   ├── dataset.py
+    │           │   ├── __init__.py
+    │           │   ├── params
+    │           │   │   └── indenter_list_with_areas_in_mm.yaml
+    │           │   └── utils.py
+    │           └── visuotactile_sensor
+    │               ├── __init__.py
+    │               ├── params
+    │               │   ├── cam_params_digit.yaml
+    │               │   └── cam_params_gelsightmini.yaml
+    │               └── visuotactile_interface.py
+    └── CMakeLists.txt
 ```
 
 ## Citation
