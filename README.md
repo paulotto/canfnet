@@ -149,6 +149,12 @@ canfnet
     │   │   ├── canfnet_node.py
     │   │   └── visuotactile_sensor_node.py
     │   ├── package.xml
+    │   ├── scripts
+    │   │   └── train
+    │   │       ├── evaluate.py
+    │   │       ├── ...
+    │   │       ├── train.py 
+    │   │       └── ...
     │   ├── setup.py
     │   └── src
     │       └── canfnet
