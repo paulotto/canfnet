@@ -1,0 +1,14 @@
+torch>=1.12.1
+torchvision>=0.13.1
+numpy>=1.23.2
+pillow>=9.2.0
+tqdm>=4.64.0
+matplotlib>=3.5.3
+opencv-python>=4.6.0.66
+neptune-client>=0.16.7
+pyyaml>=6.0
+sklearn>=0.0
+scikit-learn>=1.1.2
+onnx>=1.12.0
+onnxruntime>=1.12.1
+scipy>=1.9.2

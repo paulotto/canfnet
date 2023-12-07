@@ -1,0 +1,51 @@
+device: cpu
+flops: 12295463397
+machine_info:
+  cpu:
+    architecture: x86_64
+    cores:
+      physical: 16
+      total: 32
+    frequency: 3.40 GHz
+    model: AMD Ryzen 9 5950X 16-Core Processor
+  gpus:
+  - memory: 24576.0 MB
+    name: NVIDIA GeForce RTX 3090
+  memory:
+    available: 117.21 GB
+    total: 125.72 GB
+    used: 7.25 GB
+  system:
+    node: bellman
+    release: 5.15.0-53-generic
+    system: Linux
+params: 6855938
+timing:
+  batch_size_1:
+    on_device_inference:
+      human_readable:
+        batch_latency: 43.252 ms +/- 7.980 ms [36.071 ms, 122.030 ms]
+        batches_per_second: 23.72 +/- 3.46 [8.19, 27.72]
+      metrics:
+        batches_per_second_max: 27.72323718372419
+        batches_per_second_mean: 23.717953297627666
+        batches_per_second_min: 8.19473691408654
+        batches_per_second_std: 3.461463160324941
+        seconds_per_batch_max: 0.12202954292297363
+        seconds_per_batch_mean: 0.0432524299621582
+        seconds_per_batch_min: 0.036070823669433594
+        seconds_per_batch_std: 0.007979574962239815
+  batch_size_10:
+    on_device_inference:
+      human_readable:
+        batch_latency: 608.860 ms +/- 25.559 ms [579.485 ms, 736.325 ms]
+        batches_per_second: 1.65 +/- 0.06 [1.36, 1.73]
+      metrics:
+        batches_per_second_max: 1.7256696771125064
+        batches_per_second_mean: 1.6451239654392016
+        batches_per_second_min: 1.3580963420833643
+        batches_per_second_std: 0.06474406323453587
+        seconds_per_batch_max: 0.7363247871398926
+        seconds_per_batch_mean: 0.6088603353500366
+        seconds_per_batch_min: 0.5794851779937744
+        seconds_per_batch_std: 0.025558952334923626
